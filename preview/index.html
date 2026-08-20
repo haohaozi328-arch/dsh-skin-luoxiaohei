@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSH · 罗小黑皮肤 · UI 审核稿 v0.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   审核稿说明：以下两段 [data-theme] 变量块，即插件将注入的
+   --dsw-alias-* 全量 token 覆盖表。审核通过后原样搬入插件 CSS。
+   界面结构参照真实 DSH（deepseek-harness 0.1.0-rc.5 Web GUI）。
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── 浅色 · 奶油森林 ─────────────────────────────────────── */
+html[data-theme="light"] {
+  color-scheme: light;
+  --skin-bg: rgba(250, 246, 238, 0.72);
+  --skin-glass-1: rgba(255, 255, 255, 0.62);
+  --skin-glass-2: rgba(255, 255, 255, 0.46);
+  --skin-glass-3: rgba(255, 255, 255, 0.34);
+  --skin-line: rgba(46, 125, 91, 0.14);
+  --skin-line-strong: rgba(46, 125, 91, 0.28);
+  --skin-hi: rgba(255, 255, 255, 0.92);
+  --skin-ink: #20352B;
+  --skin-ink-2: #5C6E62;
+  --skin-ink-3: #8A9A8E;
+  --skin-accent: #2E7D5B;
+  --skin-accent-strong: #24694C;
+  --skin-accent-soft: rgba(46, 125, 91, 0.12);
+  --skin-eyes: #A8E10C;
+  --skin-eyes-soft: rgba(168, 225, 12, 0.22);
+  --skin-success: #4C9A3E;
+  --skin-warn: #C98A1B;
+  --skin-error: #C94F4F;
+  --skin-error-bg: rgba(201, 79, 79, 0.08);
+  --skin-code: #14241B;
+  --skin-code-ink: #DCE8D4;
+  --skin-code-dim: #7E9A82;
+  --skin-user-bg: rgba(46, 125, 91, 0.07);
+  --skin-scrollbar: rgba(46, 125, 91, 0.2);
+}
+
+/* ── 深色 · 深夜森林 ─────────────────────────────────────── */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --skin-bg: rgba(10, 20, 15, 0.74);
+  --skin-glass-1: rgba(17, 33, 25, 0.78);
+  --skin-glass-2: rgba(22, 41, 31, 0.66);
+  --skin-glass-3: rgba(28, 51, 38, 0.55);
+  --skin-line: rgba(168, 225, 12, 0.13);
+  --skin-line-strong: rgba(168, 225, 12, 0.26);
+  --skin-hi: rgba(255, 255, 255, 0.16);
+  --skin-ink: #E9E4D0;
+  --skin-ink-2: #A9B4A4;
+  --skin-ink-3: #77836F;
+  --skin-accent: #A8E10C;
+  --skin-accent-strong: #C2F23A;
+  --skin-accent-soft: rgba(168, 225, 12, 0.14);
+  --skin-eyes: #A8E10C;
+  --skin-eyes-soft: rgba(168, 225, 12, 0.2);
+  --skin-success: #8FCF5A;
+  --skin-warn: #E0A93C;
+  --skin-error: #E0705F;
+  --skin-error-bg: rgba(224, 112, 95, 0.1);
+  --skin-code: #0A140F;
+  --skin-code-ink: #C9D8C0;
+  --skin-code-dim: #5F7A66;
+  --skin-user-bg: rgba(168, 225, 12, 0.05);
+  --skin-scrollbar: rgba(168, 225, 12, 0.18);
+}
+
+/* ══════════════ 基础 ══════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  font-family: "Noto Sans SC", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+  color: var(--skin-ink);
+  background:
+    radial-gradient(1200px 700px at 85% -10%, var(--skin-eyes-soft), transparent 60%),
+    radial-gradient(1000px 800px at -10% 110%, rgba(46, 125, 91, 0.14), transparent 55%);
+  background-color: var(--skin-bg);
+  overflow: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -2;
+  background: url("assets/bg-cream.jpg") center / cover no-repeat fixed;
+  filter: saturate(0.92) brightness(1.04);
+}
+html[data-theme="dark"] body::before {
+  background: url("assets/bg-forest.jpg") center / cover no-repeat fixed;
+  filter: saturate(0.9) brightness(0.55) contrast(1.05);
+}
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: var(--skin-bg);
+}
+
+#leaves { position: fixed; inset: 0; z-index: 900; pointer-events: none; }
+
+/* ══════════════ 审核工具栏（不属于皮肤） ══════════════ */
+.review-bar {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 1200; display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(20, 40, 30, 0.86); backdrop-filter: blur(14px);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.25);
+  font-size: 12.5px; color: #E9E4D0;
+}
+.review-bar .rb-title { font-weight: 700; letter-spacing: 0.5px; margin-right: 4px; }
+.review-bar .rb-title em { font-style: normal; color: #A8E10C; }
+.review-bar button {
+  border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.08);
+  color: #E9E4D0; font-size: 12px; padding: 5px 12px; border-radius: 999px;
+  cursor: pointer; transition: all 0.18s; font-family: inherit;
+}
+.review-bar button:hover { background: rgba(168, 225, 12, 0.2); border-color: rgba(168, 225, 12, 0.4); }
+.review-bar button.on { background: #A8E10C; color: #17301F; border-color: #A8E10C; font-weight: 700; }
+.review-bar .rb-sep { width: 1px; height: 16px; background: rgba(255, 255, 255, 0.18); }
+
+/* ══════════════ 应用骨架 ══════════════ */
+.app { display: flex; height: 100vh; padding: 16px 16px 16px 10px; gap: 10px; }
+
+/* ── 侧边栏（对齐真实 DSH：logo / 新会话 / 工作区 / 会话 / 底部设置） ── */
+.sidebar {
+  width: 252px; flex-shrink: 0; display: flex; flex-direction: column;
+  border-radius: 18px; padding: 12px 10px 10px;
+  background: var(--skin-glass-2);
+  border: 1px solid var(--skin-line);
+  backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: 0 8px 32px rgba(46, 90, 66, 0.08);
+  position: relative; overflow: hidden;
+}
+.sidebar::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 4%, var(--skin-hi) 50%, transparent 96%);
+}
+.sb-top { display: flex; align-items: center; gap: 10px; padding: 2px 8px 10px; }
+.sb-top .logo-ico {
+  width: 34px; height: 34px; border-radius: 11px; overflow: hidden; flex-shrink: 0;
+  background: var(--skin-accent-soft); border: 1px solid var(--skin-line);
+  box-shadow: 0 4px 12px rgba(46, 125, 91, 0.18);
+}
+.sb-top .logo-ico img { width: 100%; height: 100%; object-fit: cover; }
+.sb-top .logo-txt { font-family: "ZCOOL XiaoWei", serif; font-size: 17px; letter-spacing: 2px; color: var(--skin-ink); line-height: 1.15; }
+.sb-top .logo-txt small { display: block; font-family: inherit; font-size: 9px; letter-spacing: 1.2px; color: var(--skin-ink-3); }
+.sb-top .sb-menu { margin-left: auto; width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: var(--skin-ink-3); font-size: 15px; cursor: pointer; border: 1px solid var(--skin-line); background: var(--skin-glass-3); overflow: hidden; }
+.sb-top .sb-menu img { width: 100%; height: 100%; object-fit: cover; }
+.btn-new .new-session-gif { width: 20px; height: 20px; border-radius: 7px; object-fit: cover; }
+.comp-tool img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+
+.btn-new {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  margin: 2px 4px 10px; padding: 9px; border-radius: 12px; border: none;
+  background: var(--skin-accent); color: #F4FAF2; font-family: inherit;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer;
+  transition: all 0.16s; box-shadow: 0 4px 14px rgba(46, 125, 91, 0.24);
+}
+html[data-theme="dark"] .btn-new { color: #16281A; }
+.btn-new:hover { background: var(--skin-accent-strong); transform: translateY(-1px); }
+.btn-new .plus { font-size: 15px; line-height: 1; }
+
+.sb-sec { font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: var(--skin-ink-3); padding: 8px 10px 5px; display: flex; align-items: center; gap: 6px; }
+.sb-sec::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--skin-line), transparent); }
+
+.sb-group {
+  margin: 0 2px 6px; border-radius: 13px; border: 1px solid var(--skin-line);
+  background: var(--skin-glass-3); overflow: hidden;
+}
+.sb-group-head { display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 12.5px; font-weight: 600; color: var(--skin-ink); cursor: pointer; }
+.sb-group-head .caret { font-size: 9px; color: var(--skin-ink-3); transition: transform 0.2s; }
+.sb-group-head .folder { width: 22px; height: 22px; object-fit: contain; opacity: 0.95; border-radius: 7px; }
+.sb-group-head .caret-gif { width: 14px; height: 14px; object-fit: contain; border-radius: 5px; opacity: 0.75; }
+.empty-mode .em-opt img { width: 18px; height: 18px; border-radius: 6px; object-fit: cover; vertical-align: -5px; margin-right: 4px; }
+.sb-group-head .g-meta { margin-left: auto; font-size: 10px; color: var(--skin-ink-3); }
+
+.sb-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 10px; font-size: 12.5px; color: var(--skin-ink-2); cursor: pointer; transition: all 0.15s; position: relative; margin: 0 3px; }
+.sb-item:hover { background: var(--skin-accent-soft); color: var(--skin-ink); }
+.sb-item.on { background: var(--skin-accent-soft); color: var(--skin-ink); font-weight: 600; }
+.sb-item.on::before { content: ""; position: absolute; left: -3px; top: 7px; bottom: 7px; width: 3px; border-radius: 3px; background: var(--skin-eyes); }
+.sb-item .gif-ic { width: 24px; height: 24px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: var(--skin-glass-3); }
+.sb-item .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-item .meta { font-size: 10px; color: var(--skin-ink-3); flex-shrink: 0; }
+
+.sb-foot { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--skin-line); display: flex; flex-direction: column; gap: 2px; }
+.sb-foot-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px; font-size: 12px; color: var(--skin-ink-2); cursor: pointer; }
+.sb-foot-row:hover { background: var(--skin-accent-soft); color: var(--skin-ink); }
+.sb-foot-row .ic { width: 18px; height: 18px; border-radius: 6px; object-fit: cover; }
+.sb-foot-row .t { flex: 1; }
+.switch { width: 30px; height: 17px; border-radius: 999px; background: var(--skin-line-strong); position: relative; transition: all 0.2s; flex-shrink: 0; }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; border-radius: 50%; background: #fff; transition: all 0.2s; }
+.sb-foot-row .switch.on { background: var(--skin-accent); }
+.sb-foot-row .switch.on::after { left: 15px; }
+
+/* ── 主区 ── */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; border-radius: 18px; overflow: hidden; position: relative;
+  background: var(--skin-glass-1); border: 1px solid var(--skin-line); backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: 0 8px 32px rgba(46, 90, 66, 0.08);
+}
+.main::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 5; background: linear-gradient(90deg, transparent 3%, var(--skin-hi) 50%, transparent 97%); }
+
+/* 头部：会话名 + 对话/轨迹标签 */
+.head { display: flex; align-items: center; gap: 14px; padding: 10px 18px; border-bottom: 1px solid var(--skin-line); flex-shrink: 0; }
+.head .h-title { font-size: 14px; font-weight: 700; color: var(--skin-ink); display: flex; align-items: center; gap: 8px; }
+.head .h-title img { width: 22px; height: 22px; border-radius: 7px; object-fit: cover; }
+.h-tabs { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--skin-glass-3); border: 1px solid var(--skin-line); }
+.h-tab { padding: 4px 14px; border-radius: 9px; font-size: 12px; color: var(--skin-ink-2); cursor: pointer; transition: all 0.15s; }
+.h-tab.on { background: var(--skin-accent); color: #F4FAF2; font-weight: 600; box-shadow: 0 2px 8px rgba(46, 125, 91, 0.22); }
+html[data-theme="dark"] .h-tab.on { color: #16281A; }
+.head .h-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.h-btn { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 10px; font-size: 12px; color: var(--skin-ink-2); cursor: pointer; border: 1px solid var(--skin-line); background: var(--skin-glass-3); font-family: inherit; transition: all 0.15s; }
+.h-btn:hover { background: var(--skin-accent-soft); color: var(--skin-ink); }
+.h-btn img { width: 16px; height: 16px; border-radius: 5px; object-fit: cover; }
+
+/* ── 消息区（平铺，无气泡） ── */
+.chat { flex: 1; overflow-y: auto; padding: 16px 24px 8px; scrollbar-width: thin; scrollbar-color: var(--skin-scrollbar) transparent; }
+.chat::-webkit-scrollbar { width: 8px; }
+.chat::-webkit-scrollbar-thumb { background: var(--skin-scrollbar); border-radius: 4px; }
+
+.msg { margin-bottom: 18px; animation: rise 0.3s ease both; max-width: 860px; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } }
+
+/* 用户消息：极淡绿整行底 + 左侧绿线（皮肤层增强，结构不变） */
+.msg.user {
+  padding: 10px 14px; border-radius: 6px 14px 14px 14px;
+  background: var(--skin-user-bg); border-left: 2px solid var(--skin-eyes);
+  font-size: 13.5px; line-height: 1.75;
+}
+.msg.user .m-who { font-size: 10.5px; color: var(--skin-ink-3); margin-bottom: 3px; display: flex; gap: 8px; }
+.msg.user p { margin-bottom: 6px; }
+.msg.user p:last-child { margin-bottom: 0; }
+
+/* AI 消息：平铺文本 */
+.ai-meta { display: flex; align-items: center; gap: 8px; font-size: 10.5px; color: var(--skin-ink-3); margin-bottom: 6px; }
+.ai-meta .ai-avatar { width: 20px; height: 20px; border-radius: 7px; object-fit: cover; border: 1px solid var(--skin-line); }
+.ai-meta .ai-name { font-weight: 600; color: var(--skin-ink-2); }
+.ai-text { font-size: 13.5px; line-height: 1.8; color: var(--skin-ink); }
+.ai-text p { margin-bottom: 8px; }
+.ai-text p:last-child { margin-bottom: 0; }
+.ai-text ul { margin: 4px 0 8px 20px; }
+.ai-text li { margin-bottom: 3px; }
+.ai-text li::marker { color: var(--skin-eyes); }
+.ai-text code { font-family: "JetBrains Mono", Consolas, monospace; font-size: 12.5px; background: var(--skin-glass-3); padding: 1.5px 7px; border-radius: 7px; border: 1px solid var(--skin-line); color: var(--skin-ink); }
+.ai-text strong { color: var(--skin-accent); font-weight: 700; }
+.ai-text .hl { background: var(--skin-eyes-soft); border-radius: 4px; padding: 0 3px; color: var(--skin-ink); }
+
+/* 思考行 */
+.think-line { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--skin-ink-3); font-style: italic; margin-bottom: 8px; }
+.think-line .th-ico { width: 15px; height: 15px; border-radius: 5px; object-fit: cover; opacity: 0.8; }
+
+/* 工具调用状态行 */
+.tool-line {
+  display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px;
+  background: var(--skin-glass-3); border: 1px solid var(--skin-line);
+  font-size: 12px; color: var(--skin-ink-2); margin-bottom: 8px; font-family: "JetBrains Mono", Consolas, monospace;
+}
+.tool-line .tl-ico { width: 16px; height: 16px; border-radius: 5px; object-fit: cover; }
+.tool-line .tl-name { font-weight: 600; color: var(--skin-ink); }
+.tool-line .tl-args { color: var(--skin-ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tool-line.ok { border-left: 3px solid var(--skin-success); }
+.tool-line.err { border-left: 3px solid var(--skin-error); color: var(--skin-error); }
+.tool-line.err .tl-name { color: var(--skin-error); }
+
+/* 代码块：深墨绿黑底（浅色模式下的视觉锚点） */
+.codeblock { margin: 10px 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--skin-line-strong); background: var(--skin-code); }
+.cb-head { display: flex; align-items: center; gap: 8px; padding: 6px 12px; font-size: 11px; color: var(--skin-code-dim); border-bottom: 1px solid rgba(168, 225, 12, 0.14); }
+.cb-head .cb-lang { font-weight: 700; letter-spacing: 0.6px; text-transform: lowercase; color: var(--skin-eyes); }
+.cb-head .cb-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--skin-eyes); opacity: 0.6; }
+.cb-head .cb-copy { margin-left: auto; font-size: 11px; padding: 1px 9px; border-radius: 6px; border: 1px solid rgba(168, 225, 12, 0.25); cursor: pointer; color: var(--skin-code-dim); font-family: inherit; background: transparent; }
+.cb-head .cb-copy:hover { color: var(--skin-eyes); border-color: var(--skin-eyes); }
+.cb-body { padding: 11px 14px; overflow-x: auto; font-family: "JetBrains Mono", Consolas, monospace; font-size: 12.5px; line-height: 1.7; color: var(--skin-code-ink); white-space: pre; }
+.cb-body .cm { color: var(--skin-code-dim); }
+.cb-body .kw { color: var(--skin-eyes); font-weight: 600; }
+.cb-body .st { color: #E0C46A; }
+.cb-body .fn { color: #8FD14F; }
+
+/* 错误信息块 */
+.errblock { margin: 8px 0; padding: 10px 14px; border-radius: 12px; background: var(--skin-error-bg); border: 1px solid rgba(201, 79, 79, 0.2); font-family: "JetBrains Mono", Consolas, monospace; font-size: 12px; color: var(--skin-error); line-height: 1.6; overflow-x: auto; }
+
+/* 消息操作按钮 */
+.msg-actions { display: flex; gap: 4px; margin-top: 8px; opacity: 0; transition: opacity 0.18s; }
+.msg:hover .msg-actions { opacity: 1; }
+.ma-btn { width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--skin-ink-3); cursor: pointer; border: 1px solid transparent; background: transparent; }
+.ma-btn:hover { background: var(--skin-accent-soft); color: var(--skin-ink); border-color: var(--skin-line); }
+
+/* AI 生成中（小黑玩球） */
+.think {
+  display: flex; align-items: center; gap: 12px; padding: 6px 2px; color: var(--skin-ink-2); font-size: 13px;
+}
+.think .think-gif { width: 48px; height: 48px; border-radius: 14px; overflow: hidden; background: var(--skin-glass-3); border: 1px solid var(--skin-line); }
+.think .think-gif img { width: 100%; height: 100%; object-fit: cover; }
+.think .think-txt { display: flex; flex-direction: column; gap: 3px; }
+.think .think-txt .dots { display: inline-flex; gap: 3px; }
+.think .think-txt .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--skin-eyes); animation: blink 1.4s ease infinite; }
+.think .think-txt .dots i:nth-child(2) { animation-delay: 0.2s; }
+.think .think-txt .dots i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 50% { opacity: 0.25; transform: translateY(2px); } }
+.think .think-step { font-size: 11px; color: var(--skin-ink-3); }
+
+/* ── 轨迹视图 ── */
+.trace { display: none; flex: 1; overflow-y: auto; padding: 18px 24px; scrollbar-width: thin; scrollbar-color: var(--skin-scrollbar) transparent; }
+body.view-trace .trace { display: block; }
+body.view-trace .chat { display: none; }
+.tr-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+.tr-stat { padding: 11px 14px; border-radius: 14px; background: var(--skin-glass-2); border: 1px solid var(--skin-line); backdrop-filter: blur(12px); }
+.tr-stat .k { font-size: 10px; color: var(--skin-ink-3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.tr-stat .v { font-size: 16px; font-weight: 800; color: var(--skin-ink); font-family: "JetBrains Mono", Consolas, monospace; }
+.tr-stat .v small { font-size: 10px; color: var(--skin-ink-3); font-weight: 400; }
+.tr-list { position: relative; padding-left: 26px; }
+.tr-list::before { content: ""; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px; border-radius: 2px; background: linear-gradient(180deg, var(--skin-eyes), var(--skin-line), var(--skin-eyes)); }
+.tr-node { position: relative; margin-bottom: 12px; }
+.tr-node::before { content: ""; position: absolute; left: -24px; top: 7px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--skin-eyes); background: var(--skin-glass-1); }
+.tr-node.tool::before { border-color: var(--skin-ink-3); }
+.tr-node .tr-card { border-radius: 13px; border: 1px solid var(--skin-line); background: var(--skin-glass-2); overflow: hidden; backdrop-filter: blur(10px); }
+.tr-node.assistant .tr-card { background: var(--skin-glass-3); }
+.tr-head { display: flex; align-items: center; gap: 8px; padding: 7px 12px; font-size: 11px; border-bottom: 1px solid var(--skin-line); }
+.tr-head .tag { padding: 1px 8px; border-radius: 6px; font-weight: 700; letter-spacing: 0.8px; font-size: 10px; }
+.tr-head .tag.assistant { background: var(--skin-accent-soft); color: var(--skin-accent); }
+.tr-head .tag.tool { background: var(--skin-glass-3); color: var(--skin-ink-3); }
+.tr-head .tr-time { margin-left: auto; color: var(--skin-ink-3); font-family: "JetBrains Mono", Consolas, monospace; }
+.tr-body { padding: 9px 12px; font-size: 12px; line-height: 1.65; color: var(--skin-ink-2); }
+.tr-body code { font-family: "JetBrains Mono", Consolas, monospace; font-size: 11.5px; color: var(--skin-ink); }
+.tr-body .ok { color: var(--skin-success); }
+.tr-body .err { color: var(--skin-error); }
+.tr-body .sess { font-size: 10.5px; color: var(--skin-ink-3); font-family: "JetBrains Mono", Consolas, monospace; }
+
+/* ── 输入区（对齐真实 DSH） ── */
+.composer { flex-shrink: 0; padding: 10px 18px 12px; border-top: 1px solid var(--skin-line); position: relative; }
+.composer .run-cat {
+  position: absolute; top: -30px; left: 10px; width: 44px; height: 44px; z-index: 5;
+  border-radius: 14px; overflow: hidden; pointer-events: none;
+  background: var(--skin-glass-2); border: 1px solid var(--skin-line);
+  box-shadow: 0 4px 14px rgba(46, 90, 66, 0.16); animation: cat-bob 2.6s ease-in-out infinite alternate;
+}
+.composer .run-cat img { width: 100%; height: 100%; object-fit: cover; }
+.comp-box {
+  display: flex; align-items: flex-end; gap: 8px; padding: 8px 8px 8px 14px;
+  border-radius: 15px; border: 1px solid var(--skin-line-strong);
+  background: var(--skin-glass-2); backdrop-filter: blur(18px);
+  transition: all 0.2s; box-shadow: 0 4px 18px rgba(46, 90, 66, 0.06);
+}
+.comp-box:focus-within { border-color: var(--skin-accent); box-shadow: 0 4px 24px var(--skin-accent-soft); }
+.comp-box textarea {
+  flex: 1; border: none; outline: none; resize: none; background: transparent;
+  font-family: inherit; font-size: 13.5px; color: var(--skin-ink); line-height: 1.6; min-height: 24px; max-height: 130px;
+}
+.comp-box textarea::placeholder { color: var(--skin-ink-3); }
+.comp-tool {
+  width: 28px; height: 28px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--skin-line); background: var(--skin-glass-3); cursor: pointer; transition: all 0.15s; font-size: 13px; color: var(--skin-ink-2);
+}
+.comp-tool:hover { background: var(--skin-accent-soft); border-color: var(--skin-line-strong); }
+.send-btn {
+  width: 36px; height: 36px; border-radius: 12px; border: none; cursor: pointer; overflow: hidden; flex-shrink: 0;
+  background: var(--skin-accent); box-shadow: 0 4px 14px rgba(46, 125, 91, 0.3); transition: all 0.18s; padding: 0;
+}
+.send-btn:hover { transform: translateY(-2px) scale(1.03); background: var(--skin-accent-strong); }
+.send-btn img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+.comp-row2 { display: flex; align-items: center; gap: 12px; padding: 6px 8px 0; font-size: 11px; color: var(--skin-ink-3); }
+.cr-item { display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 2px 8px; border-radius: 7px; border: 1px solid transparent; }
+.cr-item:hover { background: var(--skin-accent-soft); color: var(--skin-ink); }
+.cr-item .dot { width: 6px; height: 6px; border-radius: 50%; }
+.cr-item .dot.green { background: var(--skin-success); }
+.cr-model { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 2px 8px; border-radius: 7px; }
+.cr-model:hover { background: var(--skin-accent-soft); }
+.cr-model img { width: 15px; height: 15px; border-radius: 5px; object-fit: cover; }
+.cr-right { margin-left: auto; font-family: "JetBrains Mono", Consolas, monospace; font-size: 10px; color: var(--skin-ink-3); }
+.cr-right .hl { color: var(--skin-accent); }
+
+/* ── 角落装饰猫 ── */
+.deco-cat {
+  position: fixed; bottom: 14px; right: 20px; z-index: 700; pointer-events: none;
+  opacity: 0.9; filter: drop-shadow(0 6px 14px rgba(20, 45, 32, 0.25));
+  animation: cat-bob 3.2s ease-in-out infinite alternate;
+}
+@keyframes cat-bob { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-7px) rotate(2deg); } }
+.deco-cat img { width: 54px; height: 54px; object-fit: contain; border-radius: 16px; }
+
+/* ── token 标注模式 ── */
+body.show-tokens [data-tk] { outline: 1.5px dashed var(--skin-eyes); outline-offset: 3px; position: relative; }
+body.show-tokens [data-tk]:hover::after {
+  content: attr(data-tk); position: absolute; top: -20px; left: 8px; z-index: 99;
+  background: #1B3427; color: var(--skin-eyes); font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 10px; padding: 2px 9px; border-radius: 7px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.tk-legend {
+  position: fixed; right: 16px; top: 66px; z-index: 1100; display: none; width: 258px;
+  background: rgba(20, 40, 30, 0.92); backdrop-filter: blur(14px); border-radius: 16px; padding: 14px 16px;
+  border: 1px solid rgba(168, 225, 12, 0.2); color: #E9E4D0; font-size: 11.5px; box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+body.show-tokens .tk-legend { display: block; }
+.tk-legend h4 { font-size: 12px; margin-bottom: 9px; color: #A8E10C; letter-spacing: 1px; }
+.tk-legend .row { display: flex; justify-content: space-between; gap: 10px; padding: 3.5px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); }
+.tk-legend .row:last-child { border-bottom: none; }
+.tk-legend .row code { font-family: "JetBrains Mono", Consolas, monospace; font-size: 10.5px; color: #A8E10C; }
+.tk-legend .row span { color: rgba(233, 228, 208, 0.75); text-align: right; }
+
+/* ══════════════ 空状态欢迎页（对标 deep-whale 的“探索未至之境”，罗小黑版） ══════════════ */
+.empty { flex: 1; overflow-y: auto; padding: 30px 24px; display: flex; align-items: center; justify-content: center; }
+body:not(.empty-view) .empty { display: none; }
+body.empty-view .chat, body.empty-view .trace { display: none; }
+.empty-inner { width: min(720px, 100%); text-align: center; animation: rise 0.45s ease both; }
+.empty-mascot {
+  width: 108px; height: 108px; margin: 0 auto 18px; border-radius: 50%; overflow: hidden;
+  border: 2px solid var(--skin-line-strong); background: var(--skin-glass-2);
+  box-shadow: 0 12px 36px rgba(46, 125, 91, 0.22); position: relative;
+}
+.empty-mascot img { width: 100%; height: 100%; object-fit: cover; }
+.empty-mascot::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+.empty-title { font-family: "ZCOOL XiaoWei", serif; font-size: 30px; letter-spacing: 5px; color: var(--skin-ink); margin-bottom: 8px; }
+.empty-title em { font-style: normal; color: var(--skin-accent); }
+.empty-sub { font-size: 13px; color: var(--skin-ink-2); margin-bottom: 24px; letter-spacing: 0.5px; }
+.empty-sub .cat { display: inline-block; width: 18px; height: 18px; border-radius: 6px; object-fit: cover; vertical-align: -4px; margin: 0 2px; }
+.empty-mode { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--skin-glass-3); border: 1px solid var(--skin-line); margin-bottom: 16px; }
+.empty-mode .em-opt { padding: 5px 16px; border-radius: 9px; font-size: 12px; color: var(--skin-ink-2); cursor: pointer; transition: all 0.15s; }
+.empty-mode .em-opt.on { background: var(--skin-accent); color: #F4FAF2; font-weight: 600; box-shadow: 0 2px 8px rgba(46, 125, 91, 0.22); }
+html[data-theme="dark"] .empty-mode .em-opt.on { color: #16281A; }
+.empty-input {
+  display: flex; align-items: center; gap: 10px; padding: 14px 12px 14px 20px; border-radius: 20px;
+  border: 1.5px solid var(--skin-line-strong); background: var(--skin-glass-1);
+  backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(46, 90, 66, 0.1); transition: all 0.2s;
+}
+.empty-input:focus-within { border-color: var(--skin-accent); box-shadow: 0 12px 44px var(--skin-accent-soft); transform: translateY(-1px); }
+.empty-input input {
+  flex: 1; border: none; outline: none; background: transparent; font-family: inherit;
+  font-size: 14.5px; color: var(--skin-ink);
+}
+.empty-input input::placeholder { color: var(--skin-ink-3); }
+.empty-send {
+  width: 44px; height: 44px; border-radius: 14px; border: none; cursor: pointer; overflow: hidden; flex-shrink: 0;
+  background: var(--skin-accent); box-shadow: 0 6px 18px rgba(46, 125, 91, 0.3); transition: all 0.18s; padding: 0;
+}
+.empty-send:hover { transform: translateY(-2px) scale(1.04); background: var(--skin-accent-strong); }
+.empty-send img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+.empty-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+.ec-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 999px;
+  font-size: 12px; color: var(--skin-ink-2); cursor: pointer;
+  border: 1px solid var(--skin-line); background: var(--skin-glass-2); transition: all 0.15s; font-family: inherit;
+}
+.ec-chip:hover { background: var(--skin-accent-soft); color: var(--skin-ink); border-color: var(--skin-line-strong); transform: translateY(-1px); }
+.ec-chip img { width: 16px; height: 16px; border-radius: 5px; object-fit: cover; }
+.empty-foot { margin-top: 26px; font-size: 11px; color: var(--skin-ink-3); letter-spacing: 0.5px; }
+.empty-foot .dots { display: inline-flex; gap: 3px; margin-left: 2px; }
+.empty-foot .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--skin-eyes); animation: blink 1.4s ease infinite; }
+.empty-foot .dots i:nth-child(2) { animation-delay: 0.2s; }
+.empty-foot .dots i:nth-child(3) { animation-delay: 0.4s; }
+
+/* ══════════════ 侧边栏折叠 ══════════════ */
+.sidebar.collapsed { width: 60px; padding: 12px 8px; }
+.sidebar.collapsed .sb-top { justify-content: center; padding: 2px 0 10px; flex-direction: column; gap: 8px; }
+.sidebar.collapsed .logo-ico { width: 36px; height: 36px; border-radius: 12px; }
+.sidebar.collapsed .logo-txt, .sidebar.collapsed .btn-new, .sidebar.collapsed .sb-sec,
+.sidebar.collapsed .sb-group, .sidebar.collapsed .sb-item .t, .sidebar.collapsed .sb-item .meta,
+.sidebar.collapsed .sb-foot-row .t, .sidebar.collapsed .sb-foot-row .switch { display: none; }
+.sidebar.collapsed .sb-menu { margin: 0; width: 30px; height: 30px; }
+.sidebar.collapsed .sb-item { justify-content: center; padding: 8px 0; }
+.sidebar.collapsed .sb-item .gif-ic { width: 28px; height: 28px; border-radius: 10px; }
+.sidebar.collapsed .sb-foot { align-items: center; }
+.sidebar.collapsed .sb-foot-row { justify-content: center; padding: 6px 0; }
+.sidebar.collapsed .sb-foot-row .ic { width: 20px; height: 20px; }
+.sb-collapsed-hint { display: none; }
+.sidebar.collapsed .sb-collapsed-hint { display: block; text-align: center; font-size: 9px; color: var(--skin-ink-3); padding: 10px 0 4px; letter-spacing: 1px; writing-mode: vertical-rl; margin: 0 auto; }
+
+/* ══════════════ 右侧悬浮按钮（对标 deep-whale，罗小黑版） ══════════════ */
+.float-btns { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 950; display: flex; flex-direction: column; gap: 10px; }
+.float-btn {
+  width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--skin-glass-1); border: 1.5px solid var(--skin-line-strong); cursor: pointer;
+  backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgba(46, 90, 66, 0.16); transition: all 0.18s; overflow: hidden;
+  color: var(--skin-ink-2); font-size: 15px;
+}
+.float-btn:hover { transform: translateY(-2px) scale(1.06); border-color: var(--skin-accent); box-shadow: 0 10px 28px var(--skin-accent-soft); }
+.float-btn img { width: 100%; height: 100%; object-fit: cover; }
+.float-btn .fb-tip {
+  position: absolute; right: 54px; padding: 4px 11px; border-radius: 8px; font-size: 11px; white-space: nowrap;
+  background: rgba(20, 40, 30, 0.9); color: #E9E4D0; opacity: 0; pointer-events: none; transition: opacity 0.15s; font-family: inherit;
+}
+.float-btn:hover .fb-tip { opacity: 1; }
+
+.ai-text .inline-gif { height: 1.3em; vertical-align: -0.3em; border-radius: 6px; display: inline; }
+.ma-btn img { width: 14px; height: 14px; border-radius: 4px; object-fit: cover; }
+
+/* 任务完成演示 */
+.done-block {
+  display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 14px;
+  background: var(--skin-glass-2); border: 1px solid var(--skin-line); backdrop-filter: blur(12px); margin-top: 6px;
+}
+.done-block .done-gif { width: 54px; height: 54px; border-radius: 15px; overflow: hidden; background: var(--skin-glass-3); border: 1px solid var(--skin-line); flex-shrink: 0; }
+.done-block .done-gif img { width: 100%; height: 100%; object-fit: cover; }
+.done-block .done-txt { flex: 1; }
+.done-block .done-txt .d-title { font-size: 13.5px; font-weight: 700; color: var(--skin-ink); display: flex; align-items: center; gap: 6px; }
+.done-block .done-txt .d-title img { width: 20px; height: 20px; border-radius: 6px; object-fit: cover; }
+.done-block .done-txt .d-sub { font-size: 11.5px; color: var(--skin-ink-3); margin-top: 3px; }
+.done-block .done-stat { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-family: "JetBrains Mono", Consolas, monospace; font-size: 10.5px; color: var(--skin-ink-3); }
+.done-block .done-stat .big { font-size: 14px; font-weight: 800; color: var(--skin-success); }
+
+.stamp {
+  position: fixed; left: 18px; bottom: 14px; z-index: 1200; font-family: "ZCOOL XiaoWei", serif;
+  font-size: 11px; letter-spacing: 2px; color: var(--skin-ink-3); background: var(--skin-glass-3);
+  border: 1px solid var(--skin-line); border-radius: 999px; padding: 4px 14px; backdrop-filter: blur(10px);
+  user-select: none;
+}
+</style>
+</head>
+<body>
+<canvas id="leaves"></canvas>
+
+<!-- 审核工具栏 -->
+<div class="review-bar">
+  <span class="rb-title">罗小黑皮肤 · <em>审核稿 v0.4</em> · 结构对齐真实 DSH</span>
+  <span class="rb-sep"></span>
+  <button id="btn-light" class="on">奶油森林 · 浅色</button>
+  <button id="btn-dark">深夜森林 · 深色</button>
+  <span class="rb-sep"></span>
+  <button id="btn-tokens">Token 标注</button>
+  <button id="btn-loading">AI 生成中</button>
+  <button id="btn-done">任务完成</button>
+  <span class="rb-sep"></span>
+  <button id="btn-empty" class="on">空状态首页</button>
+  <button id="btn-session">会话视图</button>
+</div>
+
+<!-- token 图例 -->
+<div class="tk-legend">
+  <h4>◆ 已覆盖的 --dsw-alias-* 语义 token</h4>
+  <div class="row"><code>bg-base / bg-layer-1</code><span>主背景 / 主面板</span></div>
+  <div class="row"><code>bg-layer-2 / 3</code><span>嵌套表面</span></div>
+  <div class="row"><code>bg-overlay</code><span>弹层 / 遮罩</span></div>
+  <div class="row"><code>brand-primary</code><span>品牌强调 · 森林绿</span></div>
+  <div class="row"><code>label-primary ~ dimmed</code><span>五级文字</span></div>
+  <div class="row"><code>border-l1 ~ l4</code><span>四级边框</span></div>
+  <div class="row"><code>button-primary-*</code><span>新会话 / 主按钮</span></div>
+  <div class="row"><code>interactive-bg-*</code><span>悬停 / 选中</span></div>
+  <div class="row"><code>state-success / error</code><span>工具状态色</span></div>
+  <div class="row"><code>markdown-code-block</code><span>代码块底</span></div>
+  <div class="row"><code>specific-sidebar-fill</code><span>侧栏底色</span></div>
+  <div class="row"><code>specific-input-major</code><span>输入框</span></div>
+  <div class="row"><code>scrollbar-*</code><span>滚动条</span></div>
+  <div style="margin-top:10px;font-size:10.5px;color:rgba(233,228,208,0.55)">悬停虚线区域看对应 token 名</div>
+</div>
+
+<div class="stamp">罗小黑皮肤 · 奶油森林 / 深夜森林</div>
+
+<!-- ══════════ DSH 应用骨架 ══════════ -->
+<div class="app">
+
+  <!-- 侧边栏 -->
+  <aside class="sidebar" data-tk="--dsw-specific-sidebar-fill">
+    <div class="sb-top">
+      <div class="logo-ico"><img src="assets/lxh-peek.gif" alt="罗小黑"></div>
+      <div class="logo-txt">小黑森林<small>DeepSeek Harness</small></div>
+      <div class="sb-menu" id="btn-fold" title="折叠/展开侧栏"><img src="assets/lxh-eavesdrop.gif" alt="菜单"></div>
+    </div>
+
+    <button class="btn-new" data-tk="--dsw-alias-button-primary-fill"><img class="new-session-gif" src="assets/lxh-nod.gif" alt="新会话"> 新会话</button>
+
+    <div class="sb-sec">工作区</div>
+    <div class="sb-group">
+      <div class="sb-group-head"><img class="caret-gif" src="assets/lxh-peek.gif" alt="展开"><img class="folder folder-gif" src="assets/jump1.gif" alt="temp 工作区"> temp <span class="g-meta">3 会话</span></div>
+      <div class="sb-item on"><img class="gif-ic" src="assets/lxh-think.gif" alt=""><span class="t">优化 CSV 读取脚本</span></div>
+      <div class="sb-item"><img class="gif-ic" src="assets/lxh-pat.gif" alt=""><span class="t">RAG 向量化方案</span></div>
+      <div class="sb-item"><img class="gif-ic" src="assets/lxh-nod.gif" alt=""><span class="t">秋招简历要点</span></div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-group-head"><img class="caret-gif" src="assets/lxh-peek.gif" alt="展开"><img class="folder folder-gif" src="assets/jump2.gif" alt="dsh-skin-luoxiaohei 工作区"> dsh-skin-luoxiaohei <span class="g-meta">2 会话</span></div>
+      <div class="sb-item"><img class="gif-ic" src="assets/lxh-lazy.gif" alt=""><span class="t">皮肤素材整理</span></div>
+    </div>
+
+    <div class="sb-foot">
+      <div class="sb-foot-row" data-tk="--dsw-alias-interactive-bg-hover"><img class="ic" src="assets/lxh-peek.gif" alt="极简模式"><span class="t">极简模式</span><span class="switch on"></span></div>
+      <div class="sb-foot-row"><img class="ic" src="assets/lxh-scissors.gif" alt="设置"><span class="t">设置</span></div>
+    </div>
+  </aside>
+
+  <!-- 主区 -->
+  <main class="main">
+    <header class="head">
+      <div class="h-title"><img src="assets/lxh-think.gif" alt="">优化 CSV 读取脚本</div>
+      <div class="h-tabs" data-tk="--dsw-alias-bg-layer-3">
+        <span class="h-tab on" id="tab-chat">对话</span>
+        <span class="h-tab" id="tab-trace">轨迹</span>
+      </div>
+      <div class="h-right">
+        <button class="h-btn" title="保存会话"><img src="assets/fan-tuo.gif" alt="保存">保存</button>
+        <button class="h-btn"><img src="assets/jump2.gif" alt="">deepseek-chat</button>
+        <button class="h-btn" data-tk="--dsw-alias-state-warn-primary"><img src="assets/received.gif" alt="状态">状态</button>
+      </div>
+    </header>
+
+    <!-- 空状态欢迎页（罗小黑版） -->
+    <div class="empty" id="empty">
+      <div class="empty-inner">
+        <div class="empty-mascot"><img src="assets/lxh-think.gif" alt="小黑"></div>
+        <div class="empty-title">在这片森林里，<em>你想构建什么？</em></div>
+        <div class="empty-sub">小黑会陪你一起探索 <img class="cat" src="assets/lxh-nod.gif" alt=""> 从一句话开始，到完整的应用</div>
+        <div class="empty-mode">
+          <span class="em-opt on"><img src="assets/lxh-peek.gif" alt="">标准模式</span>
+          <span class="em-opt"><img src="assets/lxh-lazy.gif" alt="">极简模式</span>
+        </div>
+        <div class="empty-input">
+          <input id="empty-input" type="text" placeholder="描述你想要构建的内容…">
+          <button class="empty-send" title="出发"><img src="assets/send-click.gif" alt="出发"></button>
+        </div>
+        <div class="empty-chips">
+          <span class="ec-chip"><img src="assets/jump1.gif" alt="">写一个 RAG 问答平台</span>
+          <span class="ec-chip"><img src="assets/jump2.gif" alt="">分析这个仓库的结构</span>
+          <span class="ec-chip"><img src="assets/jump3.gif" alt="">给这段代码写单元测试</span>
+          <span class="ec-chip"><img src="assets/jump4.gif" alt="">优化 CSV 读取脚本</span>
+        </div>
+        <div class="empty-foot">小黑在森林里等你 <span class="dots"><i></i><i></i><i></i></span></div>
+      </div>
+    </div>
+
+    <!-- 对话视图 -->
+    <div class="chat" id="chat">
+
+      <!-- 用户消息 -->
+      <div class="msg user" data-tk="--dsw-alias-bg-layer-2">
+        <div class="m-who"><span>你</span><span>10:24</span></div>
+        <p>帮我看看这个 Python 脚本读 CSV 为什么这么慢，顺便优化一下：</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="cb-dot"></span><span class="cb-lang">python</span><button class="cb-copy">复制</button></div>
+          <div class="cb-body"><span class="cm"># data/load.py</span>
+<span class="kw">import</span> csv
+
+rows = []
+<span class="kw">with</span> open(<span class="st">"data.csv"</span>, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f:
+        rows.append(line.strip().split(<span class="st">","</span>))</div>
+        </div>
+      </div>
+
+      <!-- AI 消息：工具状态 + 思考 + 回复 -->
+      <div class="msg">
+        <div class="ai-meta"><img class="ai-avatar" src="assets/lxh-peek.gif" alt=""><span class="ai-name">罗小黑助手</span><span>10:24</span></div>
+        <div class="tool-line ok" data-tk="--dsw-alias-bg-layer-3"><img class="tl-ico" src="assets/lxh-loading.gif" alt=""><span class="tl-name">read_file</span><span class="tl-args">data/load.py · 42 行 · 0.03s</span></div>
+        <div class="tool-line ok"><img class="tl-ico" src="assets/lxh-loading.gif" alt=""><span class="tl-name">exec_command</span><span class="tl-args">python -c "..." · exit 0</span></div>
+        <div class="tool-line ok"><img class="tl-ico" src="assets/surf.gif" alt=""><span class="tl-name">Search</span><span class="tl-args">今日新闻 2026年8月17日 · 搜索完成</span></div>
+        <div class="tool-line ok"><img class="tl-ico" src="assets/lxh-loading.gif" alt=""><span class="tl-name">Pwsh</span><span class="tl-args">Get-Date · 2026-08-17 Monday</span></div>
+        <div class="tool-line ok"><img class="tl-ico" src="assets/lxh-loading.gif" alt=""><span class="tl-name">write_file</span><span class="tl-args">D:/workspace/temp/result.md · 已写入</span></div>
+        <div class="tool-line ok"><img class="tl-ico" src="assets/lxh-loading.gif" alt=""><span class="tl-name">edit_file</span><span class="tl-args">snake.html · 已修改</span></div>
+        <div class="think-line"><img class="th-ico" src="assets/lxh-think.gif" alt=""><span>慢的根源是逐行 Python 循环，换成 pandas 的 C 层读取器</span></div>
+        <div class="ai-text">
+          <p>慢的原因是<strong>逐行 Python 循环</strong>——每行都要走一次 <code>strip()</code> + <code>split()</code> 的字符串解析，100 万行就是 100 万次解释器开销。换成 <code>pandas</code> 底层 C 实现的读取器，顺带把类型推断一起做了：</p>
+          <div class="codeblock">
+            <div class="cb-head"><span class="cb-dot"></span><span class="cb-lang">python</span><button class="cb-copy">复制</button></div>
+            <div class="cb-body"><span class="cm"># 优化后：C 层解析，内存映射</span>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+df = pd.read_csv(
+    <span class="st">"data.csv"</span>,
+    encoding=<span class="st">"utf-8"</span>,
+    dtype=<span class="st">"category"</span>,      <span class="cm"># 枚举列压缩内存</span>
+    usecols=<span class="fn">lambda</span> c: c <span class="kw">not</span> <span class="kw">in</span> {<span class="st">"drop_me"</span>},
+)
+rows = df.values.tolist()</div>
+          </div>
+          <ul>
+            <li>读取耗时：<strong>3.2s → 0.57s</strong>，内存峰值下降 64% <img class="inline-gif" src="assets/money.gif" alt="省了"></li>
+            <li>数据超过 2GB 的话，再上 <span class="hl">chunksize</span> 分块 + 并行聚合</li>
+            <li>要我把分块版本也写出来吗？</li>
+          </ul>
+        </div>
+        <div class="msg-actions">
+          <div class="ma-btn" title="复制"><img src="assets/received.gif" alt="复制"></div>
+          <div class="ma-btn" title="重新生成"><img src="assets/lxh-loading.gif" alt="重新生成"></div>
+          <div class="ma-btn" title="点赞"><img src="assets/ye.gif" alt="点赞"></div>
+          <div class="ma-btn" title="点踩"><img src="assets/lxh-lazy.gif" alt="点踩"></div>
+          <div class="ma-btn" title="保存"><img src="assets/tuo.png" alt="保存"></div>
+        </div>
+      </div>
+
+      <!-- 演示：AI 生成中 -->
+      <div class="msg" id="msg-loading" style="display:none">
+        <div class="ai-meta"><img class="ai-avatar" src="assets/lxh-peek.gif" alt=""><span class="ai-name">罗小黑助手</span><span>刚刚</span></div>
+        <div class="think">
+          <div class="think-gif"><img src="assets/lxh-loading.gif" alt="小黑玩球中"></div>
+          <div class="think-txt">
+            <span>小黑在思考 <span class="dots"><i></i><i></i><i></i></span></span>
+            <span class="think-step">正在读取 data.csv 的结构…</span>
+          </div>
+        </div>
+        <div class="tool-line" data-tk="--dsw-alias-bg-layer-3"><img class="tl-ico" src="assets/lxh-loading.gif" alt=""><span class="tl-name">read_file</span><span class="tl-args">data.csv (12.4 MB)</span><span class="tl-args" style="margin-left:auto;color:var(--skin-success)">● 执行中</span></div>
+      </div>
+
+      <!-- 演示：任务完成（冲浪） -->
+      <div class="msg" id="msg-done" style="display:none">
+        <div class="ai-meta"><img class="ai-avatar" src="assets/lxh-peek.gif" alt=""><span class="ai-name">罗小黑助手</span><span>刚刚</span></div>
+        <div class="done-block">
+          <div class="done-gif"><img src="assets/surf.gif" alt="冲浪"></div>
+          <div class="done-txt">
+            <div class="d-title">任务完成！<img src="assets/ye.gif" alt="耶"></div>
+            <div class="d-sub">优化版已写入 data/load_fast.py，测试全部通过 <img src="assets/tuo.png" alt="妥" style="width:18px;height:18px;border-radius:5px;object-fit:cover;vertical-align:-4px;margin-left:2px"></div>
+          </div>
+          <div class="done-stat"><span class="big">↓ 82%</span><span>耗时 3.2s → 0.57s</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 轨迹视图 -->
+    <div class="trace" id="trace">
+      <div class="tr-stats">
+        <div class="tr-stat"><div class="k">Duration</div><div class="v">1m 24s</div></div>
+        <div class="tr-stat"><div class="k">Turns</div><div class="v">2 <small>轮</small></div></div>
+        <div class="tr-stat"><div class="k">Calls</div><div class="v">13 <small>次</small></div></div>
+        <div class="tr-stat"><div class="k">LLM</div><div class="v">31.9s <small>· 112 tok/s</small></div></div>
+      </div>
+      <div class="tr-list">
+        <div class="tr-node assistant">
+          <div class="tr-card">
+            <div class="tr-head"><span class="tag assistant">ASSISTANT</span><span>分析 CSV 读取性能问题</span><span class="tr-time">10:24:03</span></div>
+            <div class="tr-body">慢的根源是逐行循环，建议换 <code>pandas.read_csv</code>…</div>
+          </div>
+        </div>
+        <div class="tr-node tool">
+          <div class="tr-card">
+            <div class="tr-head"><span class="tag tool">TOOL</span><span class="sess">read_file</span><span class="tr-time">10:24:05</span></div>
+            <div class="tr-body"><code>data/load.py</code> · <span class="ok">读取 42 行 · 0.03s ✓</span></div>
+          </div>
+        </div>
+        <div class="tr-node tool">
+          <div class="tr-card">
+            <div class="tr-head"><span class="tag tool">TOOL</span><span class="sess">exec_command</span><span class="tr-time">10:24:06</span></div>
+            <div class="tr-body"><code>python -c "import pandas…"</code> · <span class="ok">exit 0 ✓</span></div>
+          </div>
+        </div>
+        <div class="tr-node assistant">
+          <div class="tr-card">
+            <div class="tr-head"><span class="tag assistant">ASSISTANT</span><span>给出优化代码</span><span class="tr-time">10:24:18</span></div>
+            <div class="tr-body">给出 <code>pandas.read_csv</code> 版本，耗时 <span class="ok">↓ 82%</span></div>
+          </div>
+        </div>
+        <div class="tr-node tool">
+          <div class="tr-card">
+            <div class="tr-head"><span class="tag tool">TOOL</span><span class="sess">exec_command</span><span class="tr-time">10:24:20</span></div>
+            <div class="tr-body"><code>pwd && ls -la</code> · <span class="err">Error: EPERM · terminal inspection unsupported on win32</span></div>
+          </div>
+        </div>
+        <div class="tr-node assistant">
+          <div class="tr-card">
+            <div class="tr-head"><span class="tag assistant">ASSISTANT</span><span>建议本地执行</span><span class="tr-time">10:24:31</span></div>
+            <div class="tr-body">当前环境无法执行 shell 命令，建议在本机终端手动运行…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 输入区 -->
+    <footer class="composer" data-tk="--dsw-specific-input-major">
+      <div class="run-cat" title="小黑在跑步"><img src="assets/lxh-run.gif" alt="跑步的小黑"></div>
+      <div class="comp-box">
+        <textarea id="comp-input" rows="1" placeholder="给智能体发消息"></textarea>
+        <div class="comp-tool" title="附件"><img src="assets/lxh-eavesdrop.gif" alt="附件"></div>
+        <button class="send-btn" title="发送"><img src="assets/send-click.gif" alt="发送"></button>
+      </div>
+      <div class="comp-row2">
+        <span class="cr-item" data-tk="--dsw-alias-state-success-primary"><span class="dot green"></span>Workspace Write</span>
+        <span class="cr-model"><img src="assets/jump1.gif" alt="">DeepSeek-V4-Flash <small style="color:var(--skin-ink-3)">High</small></span>
+        <span class="cr-item"><span class="dot" style="background:var(--skin-eyes)"></span>会话 · temp</span>
+        <span class="cr-right">2 轮 · 13 步 · LLM <span class="hl">31.9s</span> · 缓存命中 <span class="hl">90%</span></span>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<!-- 右侧悬浮按钮 -->
+<div class="float-btns">
+  <div class="float-btn" id="fb-theme" title="切换主题"><img src="assets/lxh-peek.gif" alt="主题"><span class="fb-tip">切换主题</span></div>
+  <div class="float-btn" title="终端"><img src="assets/lxh-run.gif" alt="终端"><span class="fb-tip">终端</span></div>
+</div>
+
+<!-- 角落装饰 -->
+<div class="deco-cat"><img src="assets/lxh-run.gif" alt="小黑在跑步"></div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* URL 参数 */
+  var qs = new URLSearchParams(location.search);
+  if (qs.get("theme") === "dark") root.setAttribute("data-theme", "dark");
+  if (qs.get("theme") === "light") root.setAttribute("data-theme", "light");
+  if (qs.get("tokens")) document.body.classList.add("show-tokens");
+  if (qs.get("loading")) {
+    document.getElementById("msg-loading").style.display = "";
+    requestAnimationFrame(function () {
+      var el = document.getElementById("chat");
+      el.scrollTop = el.scrollHeight;
+    });
+  }
+  if (qs.get("done")) {
+    document.getElementById("msg-done").style.display = "";
+    requestAnimationFrame(function () {
+      var el = document.getElementById("chat");
+      el.scrollTop = el.scrollHeight;
+    });
+  }
+  if (qs.get("view") === "trace") {
+    document.body.classList.add("view-trace");
+    document.getElementById("tab-trace").classList.add("on");
+    document.getElementById("tab-chat").classList.remove("on");
+  }
+  /* 默认空状态欢迎页；view=session 时直接进会话视图 */
+  var viewSession = qs.get("view") === "session";
+  document.body.classList.toggle("empty-view", !viewSession);
+  document.getElementById("btn-empty").classList.toggle("on", !viewSession);
+  document.getElementById("btn-session").classList.toggle("on", viewSession);
+
+  /* 空状态 / 会话切换 */
+  var btnEmpty = document.getElementById("btn-empty");
+  var btnSession = document.getElementById("btn-session");
+  function goEmpty() {
+    document.body.classList.add("empty-view");
+    btnEmpty.classList.add("on");
+    btnSession.classList.remove("on");
+  }
+  function goSession() {
+    document.body.classList.remove("empty-view");
+    btnSession.classList.add("on");
+    btnEmpty.classList.remove("on");
+  }
+  btnEmpty.addEventListener("click", goEmpty);
+  btnSession.addEventListener("click", goSession);
+  document.querySelectorAll(".sb-item").forEach(function (it) {
+    it.addEventListener("click", goSession);
+  });
+  document.querySelector(".btn-new").addEventListener("click", goEmpty);
+
+  /* 侧栏折叠 */
+  var btnFold = document.getElementById("btn-fold");
+  var sidebarEl = document.querySelector(".sidebar");
+  if (qs.get("fold")) sidebarEl.classList.add("collapsed");
+  btnFold.addEventListener("click", function () {
+    sidebarEl.classList.toggle("collapsed");
+  });
+
+  /* 悬浮主题按钮 */
+  document.getElementById("fb-theme").addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme") === "dark";
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+    btnLight.classList.toggle("on", dark);
+    btnDark.classList.toggle("on", !dark);
+  });
+
+  /* 欢迎页模式选择 */
+  document.querySelectorAll(".em-opt").forEach(function (o) {
+    o.addEventListener("click", function () {
+      o.parentElement.querySelectorAll(".em-opt").forEach(function (x) { x.classList.remove("on"); });
+      o.classList.add("on");
+    });
+  });
+
+  /* 欢迎页输入框回车进会话 */
+  document.getElementById("empty-input").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") goSession();
+  });
+
+  /* 主题切换 */
+  var btnLight = document.getElementById("btn-light");
+  var btnDark = document.getElementById("btn-dark");
+  btnLight.addEventListener("click", function () { root.setAttribute("data-theme", "light"); btnLight.classList.add("on"); btnDark.classList.remove("on"); });
+  btnDark.addEventListener("click", function () { root.setAttribute("data-theme", "dark"); btnDark.classList.add("on"); btnLight.classList.remove("on"); });
+
+  /* token 标注 */
+  var btnTokens = document.getElementById("btn-tokens");
+  btnTokens.addEventListener("click", function () {
+    var on = document.body.classList.toggle("show-tokens");
+    btnTokens.classList.toggle("on", on);
+  });
+
+  /* AI 生成中演示 */
+  var btnLoading = document.getElementById("btn-loading");
+  var msgLoading = document.getElementById("msg-loading");
+  btnLoading.addEventListener("click", function () {
+    var on = msgLoading.style.display === "none";
+    msgLoading.style.display = on ? "" : "none";
+    btnLoading.classList.toggle("on", on);
+    if (on) document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+  });
+
+  /* 任务完成演示 */
+  var btnDone = document.getElementById("btn-done");
+  var msgDone = document.getElementById("msg-done");
+  btnDone.addEventListener("click", function () {
+    var on = msgDone.style.display === "none";
+    msgDone.style.display = on ? "" : "none";
+    btnDone.classList.toggle("on", on);
+    if (on) document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+  });
+
+  /* 对话 / 轨迹切换 */
+  var tabChat = document.getElementById("tab-chat");
+  var tabTrace = document.getElementById("tab-trace");
+  function switchView(trace) {
+    document.body.classList.toggle("view-trace", trace);
+    tabChat.classList.toggle("on", !trace);
+    tabTrace.classList.toggle("on", trace);
+  }
+  tabChat.addEventListener("click", function () { switchView(false); });
+  tabTrace.addEventListener("click", function () { switchView(true); });
+
+  /* 复制按钮反馈 */
+  document.querySelectorAll(".cb-copy").forEach(function (b) {
+    b.addEventListener("click", function () {
+      b.textContent = "已复制 ✓";
+      setTimeout(function () { b.textContent = "复制"; }, 1200);
+    });
+  });
+
+  /* 输入框自动增高 */
+  var ta = document.getElementById("comp-input");
+  ta.addEventListener("input", function () {
+    ta.style.height = "auto";
+    ta.style.height = Math.min(ta.scrollHeight, 130) + "px";
+  });
+
+  /* ── 叶子飘落 ── */
+  var canvas = document.getElementById("leaves");
+  var ctx2d = canvas.getContext("2d");
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var leaves = [];
+  var LEAF_COLORS = ["#A8E10C", "#7FBF3F", "#5AA45A", "#8FD14F", "#B8E986"];
+  var COUNT = 14;
+
+  function sizeCanvas() {
+    canvas.width = window.innerWidth * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+  }
+  sizeCanvas();
+  window.addEventListener("resize", sizeCanvas);
+
+  function makeLeaf(init) {
+    return {
+      x: Math.random() * canvas.width,
+      y: init ? Math.random() * canvas.height : -30 * devicePixelRatio,
+      size: (8 + Math.random() * 10) * devicePixelRatio,
+      vy: (0.5 + Math.random() * 0.7) * devicePixelRatio,
+      vx: (0.3 + Math.random() * 0.6) * devicePixelRatio,
+      sway: Math.random() * Math.PI * 2,
+      swaySpeed: 0.008 + Math.random() * 0.012,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (0.004 + Math.random() * 0.01) * (Math.random() < 0.5 ? 1 : -1),
+      color: LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)],
+      alpha: 0.5 + Math.random() * 0.4
+    };
+  }
+  for (var i = 0; i < COUNT; i++) leaves.push(makeLeaf(true));
+
+  function drawLeaf(l) {
+    ctx2d.save();
+    ctx2d.translate(l.x, l.y);
+    ctx2d.rotate(l.rot);
+    ctx2d.globalAlpha = l.alpha;
+    ctx2d.fillStyle = l.color;
+    ctx2d.beginPath();
+    ctx2d.ellipse(0, 0, l.size, l.size * 0.42, 0, 0, Math.PI * 2);
+    ctx2d.fill();
+    ctx2d.strokeStyle = "rgba(20,45,30,0.25)";
+    ctx2d.lineWidth = Math.max(1, l.size * 0.08);
+    ctx2d.beginPath();
+    ctx2d.moveTo(-l.size * 0.9, 0);
+    ctx2d.lineTo(l.size * 0.9, 0);
+    ctx2d.stroke();
+    ctx2d.restore();
+  }
+
+  var last = performance.now();
+  function tick(now) {
+    var dt = Math.min((now - last) / 16.667, 3);
+    last = now;
+    ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < leaves.length; i++) {
+      var l = leaves[i];
+      l.sway += l.swaySpeed * dt;
+      l.y += l.vy * dt;
+      l.x += l.vx * dt + Math.sin(l.sway) * 0.5 * dt;
+      l.rot += l.rotSpeed * dt;
+      if (l.y > canvas.height + 40 * devicePixelRatio || l.x > canvas.width + 40 * devicePixelRatio) {
+        leaves[i] = makeLeaf(false);
+      }
+      drawLeaf(l);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (reduceMotion) {
+    for (var j = 0; j < leaves.length; j++) {
+      leaves[j].y = Math.random() * canvas.height;
+      drawLeaf(leaves[j]);
+    }
+  } else {
+    requestAnimationFrame(tick);
+  }
+})();
+</script>
+</body>
+</html>

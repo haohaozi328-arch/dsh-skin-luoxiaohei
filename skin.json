@@ -1,0 +1,28 @@
+{
+  "id": "luoxiaohei",
+  "name": "小黑森林",
+  "nameEn": "Luo Xiaohei Forest",
+  "author": "haohaozi",
+  "tagline": "奶油森林 / 深夜森林 · 罗小黑主题",
+  "description": "一套面向 DeepSeek Harness WebUI 的罗小黑治愈系皮肤。浅色「奶油森林」以米白玻璃面板 + 森林绿为主，深色「深夜森林」以墨绿黑 + 瞳荧光绿为主，跟随系统深浅自动切换。装饰层包含背景插画、飘落叶子和输入框左上角跑步小黑。",
+  "tags": [
+    "luoxiaohei",
+    "healing",
+    "forest",
+    "glass",
+    "cat",
+    "leaf"
+  ],
+  "accent": "#2E7D5B",
+  "bodyAttr": "data-dsh-luoxiaohei",
+  "package": "dsh-skin-luoxiaohei",
+  "wiring": {
+    "id": "ui-skin-luoxiaohei",
+    "bundleWired": false
+  },
+  "preview": {
+    "light": "preview/v4-final.png",
+    "dark": "preview/v3-empty-dark.png"
+  },
+  "order": 5
+}

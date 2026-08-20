@@ -1,0 +1,48 @@
+{
+  "name": "dsh-skin-luoxiaohei",
+  "description": "罗小黑主题皮肤 · DeepSeek Harness Web GUI（奶油森林 / 深夜森林）· Luo Xiaohei-themed skin with creamy-forest and midnight-forest palettes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./skin.json": "./skin.json",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [],
+      "platform": "web"
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "theme",
+    "skin",
+    "luoxiaohei",
+    "罗小黑",
+    "forest"
+  ],
+  "license": "MIT",
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "skin.json",
+    "assets",
+    "preview",
+    "docs",
+    "src",
+    "scripts",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ]
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>dsh-skin-luoxiaohei · 渲染验证</title>
+<style>
+/* 模拟 DSH 结构，组件全部使用 --dsw-alias-* 语义 token（与真实一致） */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body { font-family: "Noto Sans SC", "Microsoft YaHei UI", sans-serif; overflow: hidden; }
+
+.app { display: flex; height: 100vh; }
+.sidebar {
+  width: 220px; flex-shrink: 0; padding: 16px 12px;
+  background: var(--dsw-specific-sidebar-fill, #f0f0f0);
+  border-right: 1px solid var(--dsw-alias-border-l1, #e0e0e0);
+  font-size: 13px; color: var(--dsw-alias-label-primary, #111);
+}
+.sidebar .logo { font-weight: 800; font-size: 15px; margin-bottom: 18px; letter-spacing: 1px; }
+.sidebar .item { padding: 8px 10px; border-radius: 10px; margin-bottom: 4px; color: var(--dsw-alias-label-secondary, #444); }
+.sidebar .item.on { background: var(--dsw-alias-interactive-bg-active, #eee); color: var(--dsw-alias-label-primary, #111); font-weight: 600; }
+
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0;
+  background: var(--dsw-alias-bg-layer-1, #fff);
+  border-left: 1px solid var(--dsw-alias-border-l1, #e0e0e0); }
+.chat { flex: 1; overflow-y: auto; padding: 20px 24px; }
+.msg { display: flex; gap: 10px; margin-bottom: 18px; }
+.avatar { width: 30px; height: 30px; border-radius: 10px; background: var(--dsw-alias-bg-layer-3, #eee); flex-shrink: 0; }
+.bubble { flex: 1; background: var(--dsw-alias-bg-layer-2, #fafafa); border: 1px solid var(--dsw-alias-border-l1, #eee);
+  border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.7; color: var(--dsw-alias-label-primary, #111); }
+.bubble code { font-family: Consolas, monospace; font-size: 12px; background: var(--dsw-alias-markdown-inline-code, #f0f0f0); padding: 1px 6px; border-radius: 6px; color: var(--dsw-alias-label-primary, #111); }
+.codeblock { margin-top: 8px; border-radius: 12px; overflow: hidden; background: var(--dsw-alias-markdown-code-block, #1e1e1e);
+  border: 1px solid var(--dsw-alias-border-l2, #333); }
+.cb-head { padding: 5px 12px; font-size: 11px; color: var(--dsw-alias-label-tertiary, #999); border-bottom: 1px solid var(--dsw-alias-border-l1, #333); }
+.cb-body { padding: 10px 14px; font-family: Consolas, monospace; font-size: 12.5px; color: var(--shiki-foreground, #ddd); white-space: pre; }
+.btn { display: inline-block; padding: 6px 16px; border-radius: 10px; background: var(--dsw-alias-button-primary-fill, #1a73e8);
+  color: var(--dsw-alias-label-primary-foreground, #fff); font-size: 13px; font-weight: 600; border: none; cursor: pointer; }
+
+.composer { flex-shrink: 0; padding: 12px 18px 14px; border-top: 1px solid var(--dsw-alias-border-l1, #eee);
+  background: var(--dsw-specific-input-major, #fff); }
+.comp-box { display: flex; align-items: center; gap: 10px; padding: 10px 12px 10px 16px; border-radius: 14px;
+  border: 1px solid var(--dsw-alias-border-l2, #ddd); background: var(--dsw-alias-bg-layer-1, #fff); }
+.comp-box input { flex: 1; border: none; outline: none; background: transparent; font-size: 13.5px;
+  color: var(--dsw-alias-label-primary, #111); font-family: inherit; }
+.comp-box input::placeholder { color: var(--dsw-alias-label-dimmed, #999); }
+
+/* 验证面板（不属于皮肤） */
+#verify-panel { position: fixed; top: 12px; right: 12px; z-index: 99999; display: flex; gap: 8px; }
+#verify-panel button { padding: 6px 12px; border-radius: 999px; border: none; cursor: pointer; font-size: 12px; background: rgba(20,40,30,0.85); color: #E9E4D0; font-family: inherit; }
+#verify-status { position: fixed; top: 50px; right: 12px; z-index: 99999; font-size: 11px; background: rgba(20,40,30,0.8); color: #A8E10C;
+  padding: 6px 12px; border-radius: 10px; font-family: Consolas, monospace; }
+</style>
+</head>
+<body>
+<div id="verify-panel">
+  <button id="btn-dark">深色模式</button>
+  <button id="btn-light">浅色模式</button>
+</div>
+<div id="verify-status">loading…</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">DeepSeek Harness</div>
+    <div class="item on">temp · 优化 CSV</div>
+    <div class="item">RAG 向量化方案</div>
+    <div class="item">秋招简历要点</div>
+  </aside>
+  <main class="main">
+    <div class="chat">
+      <div class="msg">
+        <div class="avatar"></div>
+        <div class="bubble">慢的原因是<strong style="color:var(--dsw-alias-brand-primary,#111)">逐行 Python 循环</strong>，换成 <code>pandas.read_csv</code> 的 C 层读取器：
+          <div class="codeblock">
+            <div class="cb-head">python · 复制</div>
+            <div class="cb-body">import pandas as pd
+df = pd.read_csv("data.csv", dtype="category")  # 内存 ↓ 64%</div>
+          </div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="avatar"></div>
+        <div class="bubble">优化完成，耗时 <span style="color:var(--dsw-alias-state-success-primary,#2e8b57)">3.2s → 0.57s ↓82%</span>，<button class="btn">运行优化版</button></div>
+      </div>
+    </div>
+    <footer class="composer">
+      <div class="comp-box">
+        <input type="text" placeholder="给智能体发消息">
+        <button class="btn" style="padding:6px 14px">发送</button>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script>
+window.__ModuleLoader__ = {
+  load: function (def) { window.__skinModuleDef = def; }
+};
+</script>
+<script src="../lib/client.js"></script>
+<script>
+(function () {
+  var def = window.__skinModuleDef;
+  var status = document.getElementById("verify-status");
+  if (!def) { status.textContent = "FAIL: __ModuleLoader__.load 未被调用"; return; }
+  try {
+    var mod = def.factory(function (id) {
+      throw new Error("unexpected require: " + id);
+    });
+    window.__skinApply = mod.apply;
+    window.__skinTeardown = null;
+    mod.apply({
+      effect: function (fn) { window.__skinTeardown = fn(); return function () {}; }
+    });
+    /* URL ?dark=1 直接进深色（供 headless 截图） */
+    if (new URLSearchParams(location.search).get("dark")) {
+      document.body.setAttribute("data-ds-dark-theme", "");
+      document.documentElement.style.colorScheme = "dark";
+    }
+    var checks = [];
+    checks.push("bodyAttr=" + document.body.hasAttribute("data-dsh-luoxiaohei"));
+    checks.push("css=" + !!document.querySelector("style[data-plugin-css='dsh-skin-luoxiaohei/skin.css']"));
+    checks.push("cat=" + !!document.querySelector(".dsh-lxh-run-cat"));
+    checks.push("leaves=" + !!document.querySelector("canvas.dsh-lxh-leaves"));
+    checks.push("favicon=" + !!document.querySelector("link[rel='icon']"));
+    checks.push("title=" + document.title);
+    status.textContent = "PASS · " + checks.join(" · ");
+    status.style.color = "#A8E10C";
+  } catch (e) {
+    status.textContent = "FAIL: " + e.message;
+    status.style.color = "#E0705F";
+  }
+
+  document.getElementById("btn-dark").addEventListener("click", function () {
+    document.body.setAttribute("data-ds-dark-theme", "");
+    document.documentElement.style.colorScheme = "dark";
+  });
+  document.getElementById("btn-light").addEventListener("click", function () {
+    document.body.removeAttribute("data-ds-dark-theme");
+    document.documentElement.style.colorScheme = "light";
+  });
+})();
+</script>
+</body>
+</html>
