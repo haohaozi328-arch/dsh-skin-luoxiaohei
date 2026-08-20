@@ -8,16 +8,36 @@
 - 装饰层：背景插画、飘落叶、输入框左上角跑步小黑
 - 纯客户端插件：不修改产品 DOM、不依赖 host 行为，停用即完全还原
 
+## 预览
+
+| 浅色「奶油森林」 | 深色「深夜森林」 |
+|---|---|
+| ![奶油森林](./preview/v4-final.png) | ![深夜森林](./preview/v3-empty-dark.png) |
+
 ## 安装
 
+### AI 一键安装
+
+把下面这条命令交给 AI 助手（或任意 shell），自动从 GitHub 拉取并安装到 web profile：
+
 ```sh
-# 在 deepseek-harness 源码目录下（或任意 dsh CLI 可用的环境）：
-dsh plugin --profile web add "D:\workspace\DeepSeek\dsh-skin-luoxiaohei"
-# 或相对路径：
-dsh plugin --profile web add ../dsh-skin-luoxiaohei
+dsh plugin --profile web add https://github.com/haohaozi328-arch/dsh-skin-luoxiaohei.git
 ```
 
-重启 `dsh web`，刷新页面即生效。
+### 人工安装
+
+```sh
+# 1. 克隆仓库
+git clone https://github.com/haohaozi328-arch/dsh-skin-luoxiaohei.git
+
+# 2. 进入目录，安装到 web profile
+cd dsh-skin-luoxiaohei
+dsh plugin --profile web add .
+
+# 3. 重启 dsh web
+```
+
+安装后重启 `dsh web`，刷新页面即生效。
 
 > 安装会通过 `cordis.patch.yml`（bundle patch）自动注册 `ui-skin-luoxiaohei` 插件行，无需手动编辑。
 
