@@ -133,6 +133,16 @@ html body[data-dsh-luoxiaohei] {
 
   --shiki-foreground: #DCE8D4;
   --shiki-background: var(--dsw-alias-markdown-code-block);
+  /* 代码块是深墨绿底，DSH 默认的高亮 token 是浅色主题的深色系（#2f9e44/#d6336c…），
+     压上去同样看不清，这里整体换成深底可读的森林色系 */
+  --shiki-token-comment: #7E8F82;
+  --shiki-token-string: #A8E10C;
+  --shiki-token-keyword: #E0A93C;
+  --shiki-token-function: #8FD14F;
+  --shiki-token-constant: #D8B46A;
+  --shiki-token-string-expression: #A8E10C;
+  --shiki-token-punctuation: #C9D8C0;
+  --shiki-token-link: #8FD14F;
 }
 
 /* ═══ M1 · 深色「深夜森林」 ═══ */
@@ -537,6 +547,16 @@ html body[data-dsh-luoxiaohei][data-ds-dark-theme] [class*="_markdown_"]:not(:wh
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 22px rgba(0, 0, 0, 0.35);
 }
 
+/* ═══ 代码块：深墨绿底要配浅色代码文字 ═══ */
+/* DSH 的代码文字取的是 --dsw-alias-label-primary（浅色主题下是深绿 #20352B），
+   压在皮肤给的 #14241B 深墨绿底上几乎读不出来（Git 统计那种整段代码块最明显）。
+   这里按底色把 pre / code 的文字提亮；语法高亮若走 --shiki-token-* 变量，
+   上面那组 token 色同样是深底可读的。 */
+html body[data-dsh-luoxiaohei] [class*="_markdown_"] pre,
+html body[data-dsh-luoxiaohei] [class*="_markdown_"] pre code {
+  color: #DCE8D4;
+}
+
 /* ═══ 变色玻璃：行内代码标签（snake.html 这类小徽章，浅透流动，替代原先的深墨绿块） ═══ */
 /* 锚点用 markdown 内容容器子串匹配，不依赖 CSS Modules hash；只命中行内 code，不动代码块 */
 [class*="_markdown_"] code:not(pre code) {
@@ -935,9 +955,12 @@ body[data-ds-dark-theme] div:has(> [data-disclosure-row]) {
 				{ keys: ['search', 'grep', 'glob', '搜索', '查找', '检索', 'web search'], a: 'tool-search.gif', s: 'tool-search.png', ms: 2200 },
 			];
 			const toolRegistry = [];
+			/* 没有专属素材的工具（运行命令 / bash / pwsh / 以后新加的工具）统一用这张：
+			   静态 thumb.png，悬停切 thumb-zoom.png。想换图标只改这一行即可。 */
+			const DEFAULT_TOOL_ICON = { keys: [], a: 'thumb-zoom.png', s: 'thumb.png', ms: 900 };
 			function matchTool(name) {
 				const raw = String(name == null ? '' : name).trim();
-				if (!raw) return null;
+				if (!raw) return DEFAULT_TOOL_ICON;
 				const lower = raw.toLowerCase();
 				for (let i = 0; i < TOOL_ICONS.length; i++) {
 					const c = TOOL_ICONS[i];
@@ -951,26 +974,35 @@ body[data-ds-dark-theme] div:has(> [data-disclosure-row]) {
 						if (lower.indexOf(c.keys[k].toLowerCase()) >= 0) return c;
 					}
 				}
-				return null;
+				return DEFAULT_TOOL_ICON;
 			}
 			function scanToolRows() {
 				const rows = document.querySelectorAll('[data-disclosure-row]');
 				for (let r = 0; r < rows.length; r++) {
 					const row = rows[r];
-					const t = row.querySelector('[class*="_title_"]');
-					if (!t) continue;
 					const leading = row.querySelector('span[class*="_leading_"]');
 					if (!leading) continue;
-					const svg = leading.querySelector('svg');
 					const existing = leading.querySelector('img[data-skin-tool-img]');
+					/* 取首个「非 chevron」的 svg 作为原生工具图标：展开箭头的行不能动，
+					   否则会把展开/收缩的指示箭头换成小黑，交互提示就没了。 */
+					const svgs = leading.querySelectorAll('svg');
+					let svg = null;
+					for (let s = 0; s < svgs.length; s++) {
+						const cls = svgs[s].getAttribute('class') || '';
+						if (cls.indexOf('chevron') < 0) { svg = svgs[s]; break; }
+					}
+					if (!svg) continue;
 					if (existing) {
 						// 已注入：React 可能重建了 svg，重新隐藏，避免双图标
-						if (svg && svg.style.display !== 'none') svg.style.display = 'none';
+						if (svg.style.display !== 'none') svg.style.display = 'none';
 						continue;
 					}
-					const cfg = matchTool(t.textContent.trim());
-					if (!cfg) continue;
-					if (!svg) continue;
+					/* 文案：优先标题，没有标题的行（如「已搜索代码」这类汇总行）用概要/整行文案，
+					   仍然匹配不到就走默认图标——保证每个工具行都有小黑图标。 */
+					const titleEl = row.querySelector('[class*="_title_"]');
+					const summaryEl = row.querySelector('[class*="_summary"]');
+					const label = ((titleEl ? titleEl.textContent : '') || (summaryEl ? summaryEl.textContent : '') || row.textContent || '').trim();
+					const cfg = matchTool(label) || DEFAULT_TOOL_ICON;
 					const img = document.createElement('img');
 					img.dataset.skinToolImg = '1';
 					img.alt = ''; img.setAttribute('aria-hidden', 'true');
