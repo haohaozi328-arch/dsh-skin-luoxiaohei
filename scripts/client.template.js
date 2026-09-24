@@ -547,6 +547,40 @@ html body[data-dsh-luoxiaohei][data-ds-dark-theme] [class*="_markdown_"]:not(:wh
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 22px rgba(0, 0, 0, 0.35);
 }
 
+/* ═══ 变色玻璃：底部「已编辑 N 个文件」文件更改卡片 ═══ */
+/* 卡片自带 background:var(--dsw-alias-bg-layer-1)，表头 button 又刷了一层不透明的
+   --changes-fill（neutral-50/850），所以看着是纯白卡片。这里按结构锚定
+   [class*="_card"]:has(> [class*="_header"])（不绑 hash，只命中带表头的卡片：
+   提问卡、bash IO 卡的子节点结构不同，不会误伤），底色换成和气泡同源的流动渐变玻璃。 */
+html body[data-dsh-luoxiaohei] [class*="_card"]:has(> [class*="_header"]) {
+  --changes-fill: transparent;
+  --changes-hover: rgba(46, 125, 91, 0.1);
+  --deliverable-fill: transparent;
+  --deliverable-hover: rgba(46, 125, 91, 0.1);
+  background-color: rgba(250, 246, 236, 0.5);
+  background-image: linear-gradient(115deg, rgba(46,125,91,0.18), rgba(216,180,106,0.14), rgba(168,225,12,0.15), rgba(244,250,242,0.3), rgba(201,138,27,0.11), rgba(46,125,91,0.18));
+  background-size: 300% 300%;
+  background-position: 0% 30%;
+  animation: dshGlassFlow 16s ease-in-out infinite;
+  border: 1px solid rgba(46, 125, 91, 0.42);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+html body[data-dsh-luoxiaohei] [class*="_card"]:has(> [class*="_header"]) > [class*="_header"] {
+  background: transparent;
+  border-bottom: .5px solid rgba(46, 125, 91, 0.22);
+}
+html body[data-dsh-luoxiaohei][data-ds-dark-theme] [class*="_card"]:has(> [class*="_header"]) {
+  background-color: rgba(17, 33, 25, 0.52);
+  background-image: linear-gradient(115deg, rgba(46,125,91,0.26), rgba(168,225,12,0.13), rgba(216,180,106,0.13), rgba(10,20,15,0.46), rgba(46,125,91,0.26));
+  border-color: rgba(168, 225, 12, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+html body[data-dsh-luoxiaohei][data-ds-dark-theme] [class*="_card"]:has(> [class*="_header"]) > [class*="_header"] {
+  border-bottom-color: rgba(168, 225, 12, 0.22);
+}
+
 /* ═══ 代码块：深墨绿底要配浅色代码文字 ═══ */
 /* DSH 的代码文字取的是 --dsw-alias-label-primary（浅色主题下是深绿 #20352B），
    压在皮肤给的 #14241B 深墨绿底上几乎读不出来（Git 统计那种整段代码块最明显）。
