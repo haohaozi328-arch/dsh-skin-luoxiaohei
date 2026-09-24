@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-luoxiaohei",
-  "description": "罗小黑主题皮肤 · DeepSeek Harness Web GUI（奶油森林 / 深夜森林）· Luo Xiaohei-themed skin with creamy-forest and midnight-forest palettes",
+  "description": "罗小黑主题皮肤 · DeepSeek Harness 桌面端 App / Web GUI（奶油森林 / 深夜森林）· Luo Xiaohei-themed skin for the DeepSeek Harness desktop app and Web GUI",
   "version": "0.1.0",
   "private": true,
   "type": "module",
