@@ -1,0 +1,22 @@
+/* ═══ 小黑指针（由 body[data-lxh-cursor] 控制，设置页切换） ═══ */
+/* 普通区域用静态拇指；可点元素用放大拇指；输入区保持文本光标 */
+html body[data-lxh-cursor="lxh"] *:not(input):not(textarea):not(select):not([contenteditable]):not(a):not(button):not(summary):not([role="button"]):not([role="link"]):not([role="menuitem"]):not([role="option"]):not([role="checkbox"]) {
+  cursor: url("__ASSET_thumb.png__") 16 8, auto !important;
+}
+html body[data-lxh-cursor="lxh"] a,
+html body[data-lxh-cursor="lxh"] button,
+html body[data-lxh-cursor="lxh"] summary,
+html body[data-lxh-cursor="lxh"] [role="button"],
+html body[data-lxh-cursor="lxh"] [role="link"],
+html body[data-lxh-cursor="lxh"] [role="menuitem"],
+html body[data-lxh-cursor="lxh"] [role="option"],
+html body[data-lxh-cursor="lxh"] [role="checkbox"],
+html body[data-lxh-cursor="lxh"] [onclick] {
+  cursor: url("__ASSET_thumb-zoom.png__") 28 14, auto !important;
+}
+html body[data-lxh-cursor="lxh"] input,
+html body[data-lxh-cursor="lxh"] textarea,
+html body[data-lxh-cursor="lxh"] select,
+html body[data-lxh-cursor="lxh"] [contenteditable] {
+  cursor: text !important;
+}

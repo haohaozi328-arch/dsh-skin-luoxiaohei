@@ -345,12 +345,16 @@ body[data-ds-dark-theme] .dsh-lxh-hero-mascot img {
   50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.04); }
 }
 
-/* 标题逐字由 .dsh-lxh-title-char 负责入场，headlineText 容器本身不再自带淡入 */
+/* 标题逐字由 .dsh-lxh-title-char 负责入场，标题容器本身不再自带淡入
+   DSH 0.2.2 起标题是 span[class*="titleGroup"] > span（纯文本）；旧版是 span[class*="headlineText"]，
+   两个选择器都留着，跟着官方版本走 */
+[class*="titleGroup"] > span:first-child,
 [data-phase="hero"] span[class*="headlineText"] {
   font-variant-numeric: normal;
 }
 
 /* 标题配色：炭墨绿 → 酸荧光绿渐变（与绿环光晕呼应） */
+[class*="titleGroup"] > span:first-child,
 [data-phase="hero"] span[class*="headlineText"] {
   color: #1C4F39; /* fallback */
 }
