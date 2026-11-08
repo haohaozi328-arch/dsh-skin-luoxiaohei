@@ -2,7 +2,7 @@
 
 给 DeepSeek Harness 换上罗小黑主题。浅色「奶油森林」与深色「深夜森林」双主题，跟随系统深浅自动切换，让工作界面焕然一新。
 
-> **兼容性**：已适配 **DeepSeek Harness 桌面端 App**（`desktop` profile）与命令行 `dsh web`（`web` profile），实测版本 `0.1.7-rc.2`。
+> **兼容性**：已适配 **DeepSeek Harness 桌面端 App**（`desktop` profile）与命令行 `dsh web`（`web` profile），实测版本 `0.2.2-rc.1`。
 
 ## 效果
 
@@ -87,6 +87,15 @@ dsh plugin --profile web remove dsh-skin-luoxiaohei
 
 ## 更新记录
 
+### 2026-11-06 · 0.2.1 · 对齐 DSH 0.2.2
+
+DSH 0.2.2-rc.1 重写了首屏结构，皮肤的 Hero 装饰随之失效（静默不生效，不报错）：
+
+- **首屏标题锚点**：`span[class*="headlineText"]` → `span[class*="titleGroup"] > span:first-child`（0.2.2 里标题是 `titleGroup` 下的纯文本 span，旁边是 `previewBadge`）。旧锚点保留为回退，老版本 DSH 仍然生效
+- **首屏小黑插入点**：改为插到 `div[class*="_headline"]` 之前（容器 `div[class*="_stack"]`），跟着新结构走
+- 复核了其余装饰锚点：AI 正文玻璃框（`_markdown_`）、用户气泡（`_bubble_` + `_userStack`）、工具行图标（`_leading_` + `[data-disclosure-row]`）、权限菜单图标（`_itemIcon_`）、发送键（`aria-label`）在 0.2.2 全部仍然命中 —— 这些类名来自 `dsh-client-ui-primitives`（打进前端 bundle，形如 `_markdown_1wejo_28`），没有被这轮重构影响
+- 在 0.2.2-rc.1 的独立实例上实测：首屏小黑注入 ✓、标题替换 8 字 ✓、关掉开关还原「探索未至之境」✓、设置页与全部开关 ✓、控制台零报错
+
 ### 2026-11-05 · 0.2.0 · 设置页重做
 
 - **修掉串页 bug**：旧版把「鼠标样式」「背景图片」两行注入 `[role="dialog"]` 里的第一个对话框，导致每个弹窗（包括非设置类弹窗）都会长出这两行。现在删掉整段 DOM 注入，改为注册到 DSH 的设置槽位 `settings.section`，只在小黑森林自己的页面出现
@@ -94,7 +103,7 @@ dsh plugin --profile web remove dsh-skin-luoxiaohei
 - **主题模式**：皮肤样式表里的深色规则原来只认 `[data-ds-dark-theme]`，现在按设置做选择器改写 —— 强制深色改写成插件自己的 `[data-lxh-dark]`，强制浅色则整段失效
 - **修掉装饰拆不干净的时序问题**：输入框晚于挂载才渲染时，发送键覆盖层由 MutationObserver 后补，而清理器只在「首次就装饰成功」时才注册，导致关掉开关后覆盖层残留。现在清理器无条件注册，并给 observer 的 rAF 回调加了拆卸守卫
 - **拆卸改为逆序**：监听器先停、装饰再撤，避免拆到一半又被回调挂回去
-- **构建链**：`scripts/build.mjs` 从 `scripts/client.template.js` + `scripts/parts/*` 生成 `lib/client.js`，素材从 `assets/` 读，不再依赖 python
+- **构建链**：`scripts/build.mjs` 从 `scripts/client.template.js` + `scripts/parts/*` 生成 `lib/client.js`，素材从 `assets/` 读（缺了就从上一次的产物里还原），不再依赖 python
 
 ### 2026-09-24 · 适配 DSH 桌面端 `0.1.7-rc.2`
 

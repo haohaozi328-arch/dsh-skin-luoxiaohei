@@ -15,7 +15,7 @@
 		const SECTION_ID = "luoxiaohei";
 		const SECTION_ORDER = 60;
 		const SECTION_LABEL = "小黑森林";
-		const VERSION = "0.2.0";
+		const VERSION = "0.2.1";
 
 		const THEMES = ["system", "light", "dark"];
 		const BACKGROUNDS = ["forest", "plain", "custom"];
@@ -206,18 +206,35 @@
 				});
 			}
 
+			/* ── Hero 锚点 ──
+			 * DSH 0.2.2 起首屏标题结构变成：
+			 *   div[class*="_headline"] > span[class*="titleGroup"] > span（纯文本）+ span[class*="previewBadge"]
+			 * 旧版是 span[class*="headlineText"]。两个都认，优先新结构。 */
+			function findHeroParts() {
+				const titleGroup = document.querySelector('span[class*="titleGroup"]');
+				if (titleGroup) {
+					const text = titleGroup.firstElementChild;
+					const headline = titleGroup.parentElement;
+					if (text && headline) {
+						return { text: text, parent: headline.parentElement || headline, before: headline };
+					}
+				}
+				const legacy = document.querySelector('[data-phase="hero"] span[class*="headlineText"]');
+				if (legacy) {
+					const stack = legacy.parentElement && legacy.parentElement.parentElement;
+					if (stack) return { text: legacy, parent: stack, before: stack.firstChild };
+				}
+				return null;
+			}
+
 			/* ── Hero 欢迎页形象：罗小黑剪刀手 GIF ── */
 			const heroDisposers = [];
 			let heroWrap = null;
 			function injectHeroMascot() {
 				if (heroWrap && document.body.contains(heroWrap)) return;
-				const hero = document.querySelector('[data-phase="hero"]');
-				if (!hero) return;
-				/* headlineText 的 hash class 保留 "headlineText" 子串，可稳定锚定 */
-				const hText = hero.querySelector('span[class*="headlineText"]');
-				if (!hText) return;
-				const stack = hText.parentElement && hText.parentElement.parentElement;
-				if (!stack || stack.querySelector(".dsh-lxh-hero-mascot")) return;
+				const parts = findHeroParts();
+				if (!parts || !parts.parent) return;
+				if (parts.parent.querySelector(".dsh-lxh-hero-mascot")) return;
 				const wrap = document.createElement("div");
 				wrap.className = "dsh-lxh-hero-mascot";
 				wrap.dataset.skinMascot = "1";
@@ -243,7 +260,7 @@
 				}
 				wrap.addEventListener("click", playOnce);
 				playOnce();
-				stack.insertBefore(wrap, stack.firstChild);
+				parts.parent.insertBefore(wrap, parts.before);
 				heroWrap = wrap;
 				heroDisposers.push(function () {
 					window.clearTimeout(clickTimer);
@@ -257,10 +274,9 @@
 			const HERO_TITLE = "小黑在森林里等你";
 			const titleSwaps = [];
 			function syncHeroTitle() {
-				const hero = document.querySelector('[data-phase="hero"]');
-				if (!hero) return;
-				const hText = hero.querySelector('span[class*="headlineText"]');
-				if (!hText) return;
+				const parts = findHeroParts();
+				if (!parts) return;
+				const hText = parts.text;
 				if (hText.dataset.skinTitleDone) return;
 				/* 仅替换纯文本（单个文本节点），拆成逐字 span 实现放大动效 */
 				if (hText.childNodes.length !== 1 || !hText.firstChild || hText.firstChild.nodeType !== 3) return;
